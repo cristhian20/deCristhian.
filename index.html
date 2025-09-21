@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Flores amarillas – Sorpresa</title>
+<style>
+  :root{--yellow:#ffe66d;--yellow-strong:#ffd83b;--ink:#1a1a1a;--bg:#020202}
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--bg);display:grid;place-items:center;
+    height:100dvh; /* móvil sin saltos por barras */
+    color:var(--yellow);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden
+  }
+  .stage{position:relative;inline-size:min(100vw,980px);block-size:100dvh;max-block-size:980px;isolation:isolate}
+
+  /* Oculta TODO hasta revelar */
+  .stage:not(.revealed) .sky,
+  .stage:not(.revealed) .title,
+  .stage:not(.revealed) .garden,
+  .stage:not(.revealed) .controls{opacity:0;visibility:hidden}
+
+  /* Escena */
+  .sky{position:absolute;inset:0;z-index:-3;
+    background:radial-gradient(ellipse at top,transparent 0%,#020202 60%),
+               radial-gradient(ellipse at bottom,#020202 40%,#91e9ff33 100%),
+               linear-gradient(90deg,#00fffad0,#f0f0f0);
+    filter:blur(.08vmin)
+  }
+  .title{position:absolute;inset-inline:0;top:calc(env(safe-area-inset-top) + 18px);text-align:center;color:var(--yellow);text-shadow:0 1px 0 #0008;font-weight:700}
+  .title span{display:block;font-size:clamp(18px,3vw,28px)}
+  .subtitle{opacity:.95;font-size:clamp(14px,2.4vw,18px)}
+  .garden{position:absolute;inset:0;display:grid;place-items:end center;padding-bottom:calc(16vmin + env(safe-area-inset-bottom))}
+  .flowers{position:relative;width:100%;height:100%}
+  .flower{position:absolute;bottom:0;transform-origin:bottom center;animation:float 6s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateX(-50%) scale(var(--s,1)) rotate(var(--r,0deg))}50%{transform:translate(-50%,-.8vmin) scale(var(--s,1)) rotate(calc(var(--r,0deg)+.6deg))}}
+  .stem{inline-size:1.1vmin;block-size:var(--h,36vmin);border-radius:1vmin;background:linear-gradient(to top,#0d5f1a,#2fcf47);box-shadow:inset 0 0 2px #0006;animation:grow 2s both}
+  @keyframes grow{from{block-size:0;opacity:0}to{block-size:var(--h,36vmin);opacity:1}}
+  .leaf{position:absolute;inline-size:5vmin;block-size:7vmin;left:100%;border-top-right-radius:10vmin;border-bottom-left-radius:10vmin;background:linear-gradient(to top,#178a1b33,#1ea12b);transform:rotate(58deg);filter:drop-shadow(0 0 .3vmin #0008)}
+  .leaf.-left{left:auto;right:460%;transform:rotate(-58deg)}
+  .head{position:absolute;bottom:calc(var(--h,36vmin) - 2px);left:50%;transform:translate(-50%,0) scale(var(--hs,1));width:8vmin;height:8vmin}
+  .petal{position:absolute;left:50%;top:50%;transform-origin:center center;width:5vmin;height:8.6vmin;
+    clip-path:polygon(50% 0%,64% 14%,82% 40%,68% 70%,50% 100%,32% 70%,18% 40%,36% 14%);
+    background:linear-gradient(to bottom,#ffe77a 0%,#ffd83b 55%,#e6b925 100%);
+    filter:drop-shadow(0 0 .25vmin #0006)}
+  .center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:4.5vmin;height:4.5vmin;border-radius:50%;background:radial-gradient(circle at 35% 35%,#5a4305 0 40%,#3a2a00 60%,#231700 100%);box-shadow:0 0 0 .7vmin #c99a0a inset,0 0 0 1.3vmin #7c5f04 inset,0 2px 6px #0006}
+  .tulip-head{position:absolute;bottom:calc(var(--h,36vmin) - 2px);left:50%;transform:translateX(-50%) scale(var(--hs,1));width:7vmin;height:9vmin}
+  .tulip{position:absolute;left:50%;bottom:0;width:5vmin;height:8vmin;border-radius:60% 60% 42% 42%;transform-origin:center bottom;background:linear-gradient(180deg,#ffe577 0%,#ffd83b 60%,#e6b925 100%);box-shadow:0 0 6px #0005}
+  .t-left{transform:translate(-66%,-6%) rotate(-9deg)}
+  .t-mid{transform:translate(-50%,-2%)}
+  .t-right{transform:translate(-34%,-6%) rotate(9deg)}
+  .midgrass{position:absolute;inset-inline:0;bottom:0;height:16vmin;z-index:-1;background:repeating-linear-gradient(90deg,#0000 0 8px,#0e3d15 8px 9px,#0000 9px 18px),linear-gradient(to top,#0c3a14,#0e541b)}
+  .foliage{position:absolute;inset-inline:0;bottom:0;height:22vmin;z-index:-2;background:radial-gradient(18vmin 10vmin at 8% 82%,#1e6f2b 10%,#155421 40%,#0000 55%),radial-gradient(22vmin 12vmin at 22% 86%,#1a7a2a 8%,#145d20 42%,#0000 56%),radial-gradient(20vmin 10vmin at 38% 88%,#207f31 8%,#146024 42%,#0000 56%),radial-gradient(24vmin 12vmin at 56% 84%,#1a7a2f 8%,#155b22 44%,#0000 58%),radial-gradient(18vmin 9vmin at 72% 88%,#1a7a2a 8%,#145d20 42%,#0000 56%),radial-gradient(20vmin 10vmin at 88% 84%,#207f31 8%,#146024 42%,#0000 56%),linear-gradient(to top,#0b3b12 0 40%,#0f4d18 60%,#0000 100%)}
+
+  .controls{position:absolute;inset-inline:0;bottom:calc(env(safe-area-inset-bottom) + 24px);display:flex;gap:10px;justify-content:center}
+  .btn{background:var(--ink);color:var(--yellow);border:0;border-radius:999px;padding:.85rem 1.3rem;font-weight:700;cursor:pointer}
+
+  /* Chispas */
+  .spark{position:absolute;bottom:0;inline-size:1vmin;block-size:1vmin;border-radius:50%;background:var(--spark,#fff900);filter:blur(.18vmin);opacity:0;pointer-events:none;z-index:1}
+  @keyframes rise{0%{opacity:0;transform:translate(0,0)}20%{opacity:1}60%{filter:blur(.2vmin)}100%{opacity:0;transform:translate(var(--dx,0),-28vmin);filter:blur(.8vmin)}}
+
+  /* Portada negra a pantalla completa */
+  #introCover{position:fixed;inset:0;min-height:100dvh;display:grid;place-items:center;background:#000;z-index:10000}
+  #introCard{background:var(--ink);color:var(--yellow);padding:1.1rem 1.35rem;border-radius:18px;box-shadow:0 10px 34px #000a;max-width:min(92vw,680px);text-align:center}
+  #introCard h2{margin:.1rem 0 .55rem 0;font-size:clamp(18px,3.8vw,26px)}
+  #startBtn{background:var(--yellow-strong);color:var(--ink);border:0;border-radius:999px;padding:.9rem 1.35rem;font-weight:800;cursor:pointer}
+
+  /* Fade del overlay y reveal suave del escenario */
+  .fade-out{animation:fadeOut 1.2s ease forwards}
+  @keyframes fadeOut{to{opacity:0;visibility:hidden}}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .stage.revealed .sky,
+  .stage.revealed .title,
+  .stage.revealed .garden,
+  .stage.revealed .controls{animation:fadeInUp .8s ease-out both}
+  .stage.revealed .title{animation-delay:.05s}
+  .stage.revealed .garden{animation-delay:.1s}
+
+  /* Ajustes móviles */
+  @media (max-width:480px){
+    .title span{font-size:clamp(16px,5vw,22px)}
+    .controls{bottom:calc(env(safe-area-inset-bottom) + 16px)}
+    .garden{padding-bottom:calc(14vmin + env(safe-area-inset-bottom))}
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="sky"></div>
+    <h1 class="title"><span>Las flores amarillas simbolizan la felicidad.</span><span class="subtitle">Tú formas parte de la mía 💛</span></h1>
+
+    <div class="garden" id="garden">
+      <div class="flowers"></div>
+      <div class="midgrass" aria-hidden="true"></div>
+      <div class="foliage" aria-hidden="true"></div>
+    </div>
+
+    <div class="controls">
+      <button class="btn" id="btnBloom">✨ Florecer</button>
+    </div>
+
+    <!-- Audio (Dropbox directo) -->
+    <audio id="song" preload="metadata">
+      <source src="https://www.dropbox.com/scl/fi/pqg0i2y5otyulj8wkuej5/floricienta-flores-amarillas.mp3?rlkey=5b6clutssnrm9p0bna1c8vp4a&st=pqc1f8i0&dl=1" type="audio/mpeg" />
+    </audio>
+
+    <!-- Portada negra sorpresa -->
+    <div id="introCover">
+      <div id="introCard">
+        <!-- Cambia libremente este título -->
+        <h2>"Cuando sonríes, el sol aprende a brillar ☀️"</h2>
+        <!-- Sin subtítulo, como pediste -->
+        <button id="startBtn">Comenzar ✨</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const flowersWrap=document.querySelector('.flowers');
+  const garden=document.getElementById('garden');
+  const song=document.getElementById('song');
+  const btnBloom=document.getElementById('btnBloom');
+
+  function el(tag,cls){const e=document.createElement(tag);if(cls)e.className=cls;return e;}
+  function createSunflowerHead(){
+    const head=el('div','head');
+    const petals=20;
+    for(let k=0;k<petals;k++){
+      const p=el('div','petal');
+      p.style.transform=`translate(-50%,-50%) rotate(${k*(360/petals)}deg)`;
+      head.appendChild(p);
+    }
+    head.appendChild(el('div','center'));
+    return head;
+  }
+  function createTulipHead(){
+    const wrap=el('div','tulip-head');
+    wrap.appendChild(el('div','tulip t-left'));
+    wrap.appendChild(el('div','tulip t-mid'));
+    wrap.appendChild(el('div','tulip t-right'));
+    return wrap;
+  }
+
+  function createFlower(type){
+    const f=el('div','flower');
+    const stem=el('div','stem');
+    const leaves=2+Math.floor(Math.random()*3);
+    for(let j=0;j<leaves;j++){
+      const l=el('div','leaf'+(Math.random()>.5?' -left':''));
+      l.style.top=(18+j*12+Math.random()*6)+'%';
+      stem.appendChild(l);
+    }
+    const isSun=(type==='sunflower');
+    const head=isSun?createSunflowerHead():createTulipHead();
+    head.style.setProperty('--hs', isSun ? (1.30 + Math.random()*0.20).toFixed(2) : (0.80 + Math.random()*0.08).toFixed(2));
+    f.appendChild(stem); f.appendChild(head);
+    return f;
+  }
+
+  function buildGarden(){
+    flowersWrap.innerHTML='';
+    const isNarrow = matchMedia('(max-width: 480px)').matches;
+    const count = isNarrow ? 10 : 14;
+    const step=100/(count+1);
+    let tIndex=0;
+    for(let i=0;i<count;i++){
+      const type=(tIndex++%2===0)?'sunflower':'tulip';
+      const f=createFlower(type);
+      f.style.left=(step*(i+1)+(Math.random()*2-1))+'%';
+      const tilt=(Math.random()*4-2).toFixed(1);
+      f.style.setProperty('--r',tilt+'deg');
+      let s;
+      if(type==='sunflower'){ s=(1.08+Math.random()*0.30).toFixed(2); }
+      else{ s=(0.55+Math.random()*0.15).toFixed(2); }
+      if(isNarrow){
+        const clamp=(v,min,max)=>Math.max(min,Math.min(max,parseFloat(v)));
+        s = clamp(s, 0.50, 1.25).toFixed(2);
+        const headEl = f.querySelector('.head, .tulip-head');
+        const curHs = headEl?.style.getPropertyValue('--hs') || (type==='sunflower'?'1.35':'0.85');
+        const hsClamped = clamp(curHs, 0.80, 1.35).toFixed(2);
+        if(headEl) headEl.style.setProperty('--hs', hsClamped);
+      }
+      f.style.setProperty('--s', s);
+      const h=(type==='sunflower' ? (34+Math.random()*8) : (28+Math.random()*6)).toFixed(1)+'vmin';
+      f.style.setProperty('--h', h);
+      flowersWrap.appendChild(f);
+    }
+  }
+
+  function spark(x){
+    const s=el('div','spark');
+    s.style.left=x+'px';
+    s.style.setProperty('--dx',`${(Math.random()*40-20)}vmin`);
+    s.style.animation=`rise ${2.2+Math.random()*1.1}s linear forwards`;
+    garden.appendChild(s);
+    s.addEventListener('animationend',()=>s.remove(),{once:true});
+  }
+  function burst(n=30){
+    const r=garden.getBoundingClientRect();
+    for(let i=0;i<n;i++) spark(r.width/2+(Math.random()*r.width*0.6-r.width*0.3));
+  }
+
+  // “Florecer” también inicia música si aún no suena
+  btnBloom.addEventListener('click', async ()=>{
+    try{ if(song.paused){ await song.play(); } }catch(e){ /* silently ignore */ }
+    burst(30);
+  });
+
+  buildGarden();
+
+  // Re-layout al rotar móvil
+  addEventListener('orientationchange', ()=>{
+    clearTimeout(window._relayout);
+    window._relayout = setTimeout(buildGarden, 250);
+  });
+
+  // Portada negra: al tocar, reproducir y revelar
+  window.addEventListener('load', ()=>{
+    const overlay=document.getElementById('introCover');
+    const startBtn=document.getElementById('startBtn');
+    const stage=document.querySelector('.stage');
+
+    const start=async()=>{
+      try{
+        await song.play();
+      }catch(e){ /* si falla por políticas, ya hubo interacción del botón */ }
+      stage.classList.add('revealed');
+      overlay.classList.add('fade-out');
+      setTimeout(()=> overlay.style.display='none', 1200);
+      burst(42);
+    };
+
+    overlay.style.display='grid';
+    if(startBtn) startBtn.addEventListener('click', start, {once:true});
+    // También si tocan fuera del botón (sigue siendo sorpresa)
+    overlay.addEventListener('click', (ev)=>{ if(ev.target.id==='introCover') start(); });
+  });
+</script>
+</body>
+</html>
