@@ -2,7 +2,7 @@
 
 Una página web interactiva y animada desarrollada con HTML5, CSS3 y JavaScript puro. Diseñada como un detalle virtual para regalar flores amarillas, cuenta con una pantalla de bienvenida interactiva, música de fondo sincronizada, animaciones fluidas de tallos, pétalos y un efecto de partículas luminosas.
 
-🔗 **Demostración:** [Ver proyecto desplegado](https://cristhian20.github.io/deCristhian./)
+🔗 **Demostración:** [Ver proyecto](https://cristhian20.github.io/deCristhian./)
 
 ---
 
@@ -26,8 +26,6 @@ Una página web interactiva y animada desarrollada con HTML5, CSS3 y JavaScript 
 
 ## 🚀 Cómo usar o personalizar este proyecto
 
-Si deseas clonar o adaptar este proyecto para personalizar el mensaje o la música:
+* Solo envía el siguiente enlace --->  https://cristhian20.github.io/deCristhian./
+* Puedes clonar o adaptar este proyecto para personalizar el mensaje.
 
-1. **Clonar el repositorio:**
-   ```bash
-   git clone [https://github.com/cristhian20/deCristhian.git](https://github.com/cristhian20/deCristhian.git)
